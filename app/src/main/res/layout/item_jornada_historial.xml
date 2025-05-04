@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:gravity="center_vertical">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewFechaInicio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/aldrich"
+            android:text="Fecha Inicio: "
+            android:textColor="#88DC4E"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewHoraInicio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/aldrich"
+            android:text="Hora Inicio: "
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textSize="15sp" />
+
+
+        <TextView
+            android:id="@+id/textViewHoraFin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/aldrich"
+            android:text="Hora Fin: "
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textSize="15sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <TextView
+            android:id="@+id/textViewConduccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/aldrich"
+            android:text="Conducción: "
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/textViewDescanso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/aldrich"
+            android:text="Descanso: "
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/textViewOtrosTrabajos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/aldrich"
+            android:text="Otros: "
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/textViewFechaFin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/aldrich"
+            android:text="Fecha Fin: "
+            android:textColor="#D84315"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonVerMapa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FF8F00"
+        android:fontFamily="@font/aldrich"
+        android:text="Ver Mapa"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/buttonBorrarJornada"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:backgroundTint="#C62828"
+        android:fontFamily="@font/aldrich"
+        android:text="Borrar"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+
+</LinearLayout>

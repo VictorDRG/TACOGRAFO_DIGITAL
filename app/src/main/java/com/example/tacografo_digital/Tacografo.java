@@ -21,6 +21,15 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,7 +40,6 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-
 
 public class Tacografo extends AppCompatActivity implements LocationListener {
 
@@ -63,14 +71,15 @@ public class Tacografo extends AppCompatActivity implements LocationListener {
     private Location ultimaUbicacion = null;
     private final Handler handler = new Handler();
     private Runnable actualizarTiempoRunnable;
-    private String fechaInicioJornada; // Añadida fecha de inicio
-    private String fechaFinJornada; // Añadida fecha de fin
-    private List<Jornada> listaDeJornadas = new ArrayList<>(); // Lista para almacenar jornadas completas
+    private String fechaInicioJornada;
+    private String fechaFinJornada;
+    private List<Jornada> listaDeJornadas = new ArrayList<>();
     private LocationManager locationManager;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private List<Location> listaDeUbicaciones = new ArrayList<>();
+    private static final String FILENAME = "jornadas.json"; // Cambiamos la extensión del archivo
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,10 +125,14 @@ public class Tacografo extends AppCompatActivity implements LocationListener {
                         conduccionActiva = true;
                         btIniciarConduccion.setText("DETENER CONDUCCIÓN");
                         twLetreroConduccion.setTextColor(Color.parseColor("#37ff21"));
+                        btIniciarDescanso.setAlpha(0.5f);
+                        btIniciarOtros.setAlpha(0.5f);
                     } else if (conduccionActiva) {
                         conduccionActiva = false;
                         btIniciarConduccion.setText("CONDUCCIÓN");
                         twLetreroConduccion.setTextColor(Color.parseColor("#FF8F00"));
+                        btIniciarDescanso.setAlpha(1.0f);
+                        btIniciarOtros.setAlpha(1.0f);
                     }
                 }
             }
@@ -133,11 +146,14 @@ public class Tacografo extends AppCompatActivity implements LocationListener {
                         otrosActivos = true;
                         btIniciarOtros.setText("DETENER OTROS");
                         twLetreroOtros.setTextColor(Color.parseColor("#37ff21"));
-
+                        btIniciarDescanso.setAlpha(0.5f);
+                        btIniciarConduccion.setAlpha(0.5f);
                     } else if (otrosActivos) {
                         otrosActivos = false;
                         btIniciarOtros.setText("OTROS");
                         twLetreroOtros.setTextColor(Color.parseColor("#FF8F00"));
+                        btIniciarDescanso.setAlpha(1.0f);
+                        btIniciarConduccion.setAlpha(1.0f);
                     }
                 }
             }
@@ -151,14 +167,21 @@ public class Tacografo extends AppCompatActivity implements LocationListener {
                         descansoActivo = true;
                         btIniciarDescanso.setText("DETENER DESCANSO");
                         twLetreroDescanso.setTextColor(Color.parseColor("#37ff21"));
+                        btIniciarConduccion.setAlpha(0.5f);
+                        btIniciarOtros.setAlpha(0.5f);
                     } else if (descansoActivo) {
                         descansoActivo = false;
                         btIniciarDescanso.setText("DESCANSO");
                         twLetreroDescanso.setTextColor(Color.parseColor("#FF8F00"));
+                        btIniciarConduccion.setAlpha(1.0f);
+                        btIniciarOtros.setAlpha(1.0f);
                     }
                 }
             }
         });
+
+        // Cargar la lista de jornadas desde JSON al iniciar la Activity
+        cargarJornadasDesdeJSON();
 
         // Configurar el listener para el botón de inicio/fin de jornada (solo gestiona el estado de la jornada y el GPS)
         btInicioJornada.setOnClickListener(new View.OnClickListener() {
@@ -192,6 +215,9 @@ public class Tacografo extends AppCompatActivity implements LocationListener {
                     // Bloquear y poner opaco el botón Historial al iniciar la jornada
                     btHistorial.setEnabled(false);
                     btHistorial.setAlpha(0.5f); // Opacidad al 50%
+
+                    btSalirTac.setEnabled(false);
+                    btSalirTac.setAlpha(0.5f);
                 } else {
                     iniciarJornada = false;
                     btInicioJornada.setText("INICIAR JORNADA");
@@ -201,15 +227,27 @@ public class Tacografo extends AppCompatActivity implements LocationListener {
 
                     Jornada jornada = new Jornada(fechaInicioJornada, fechaFinJornada ,new ArrayList<>(listaDeUbicaciones), tiempoConduccion, tiempoOtrosTrabajos, tiempoDescanso);
                     listaDeJornadas.add(jornada);
+                    guardarJornadasEnJSON(); // Guardar la lista actualizada como JSON
 
-                    Intent intent = new Intent(Tacografo.this, Pestanas.class);
-                    intent.putParcelableArrayListExtra("jornadas", (ArrayList<Jornada>) listaDeJornadas);
+                    Intent intent = new Intent(Tacografo.this, ResumenJornadas.class);
+                    ArrayList<Jornada> ultimaJornadaLista = new ArrayList<>();
+                    ultimaJornadaLista.add(jornada); // Creamos una nueva lista con solo la última jornada
+                    intent.putParcelableArrayListExtra("jornadas",ultimaJornadaLista);
                     startActivity(intent);
                     overridePendingTransition(0, 0);
 
                     // Desbloquear y restaurar la opacidad del botón Historial al finalizar la jornada
                     btHistorial.setEnabled(true);
                     btHistorial.setAlpha(1.0f); // Opacidad completa
+
+                    btSalirTac.setEnabled(true);
+                    btSalirTac.setAlpha(1.0f);
+
+                    textViewConduccion.setText("00:00:00");
+                    textViewDescanso.setText("00:00:00");
+                    textViewOtros.setText("00:00:00");
+
+
                 }
             }
         });
@@ -217,8 +255,7 @@ public class Tacografo extends AppCompatActivity implements LocationListener {
         btHistorial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Tacografo.this, Pestanas.class);
-                intent.putParcelableArrayListExtra("jornadas", (ArrayList<Jornada>) listaDeJornadas);
+                Intent intent = new Intent(Tacografo.this, HistorialJornadas.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             }
@@ -253,6 +290,42 @@ public class Tacografo extends AppCompatActivity implements LocationListener {
                 handler.postDelayed(this, 1000);
             }
         };
+    }
+
+    private void cargarJornadasDesdeJSON() {
+        listaDeJornadas = new ArrayList<>();
+        try (FileInputStream fis = openFileInput(FILENAME);
+             InputStreamReader isr = new InputStreamReader(fis);
+             BufferedReader br = new BufferedReader(isr)) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            String jsonString = sb.toString();
+            JSONArray jsonArray = new JSONArray(jsonString);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                listaDeJornadas.add(Jornada.fromJson(jsonObject));
+            }
+            Log.i("Tacografo", "Jornadas cargadas desde JSON.");
+        } catch (IOException | JSONException e) {
+            Log.e("Tacografo", "Error al cargar jornadas desde JSON o archivo no encontrado: " + e.getMessage());
+        }
+    }
+
+    private void guardarJornadasEnJSON() {
+        JSONArray jsonArray = new JSONArray();
+        for (Jornada jornada : listaDeJornadas) {
+            jsonArray.put(jornada.toJson());
+        }
+        String jsonString = jsonArray.toString();
+        try (FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE)) {
+            fos.write(jsonString.getBytes());
+            Log.i("Tacografo", "Jornadas guardadas en JSON.");
+        } catch (IOException e) {
+            Log.e("Tacografo", "Error al guardar jornadas en JSON: " + e.getMessage());
+        }
     }
 
     private void actualizarTextViews() {
@@ -392,6 +465,53 @@ public class Tacografo extends AppCompatActivity implements LocationListener {
             tiempoConduccion = in.readLong();
             tiempoOtrosTrabajos = in.readLong();
             tiempoDescanso = in.readLong();
+        }
+
+        public JSONObject toJson() {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("fechaInicio", this.fechaInicio);
+                jsonObject.put("fechaFin", this.fechaFin);
+                JSONArray ubicacionesJsonArray = new JSONArray();
+                if (this.ubicaciones != null) {
+                    for (Location location : this.ubicaciones) {
+                        JSONObject locationJson = new JSONObject();
+                        locationJson.put("latitude", location.getLatitude());
+                        locationJson.put("longitude", location.getLongitude());
+                        ubicacionesJsonArray.put(locationJson);
+                    }
+                }
+                jsonObject.put("ubicaciones", ubicacionesJsonArray);
+                jsonObject.put("tiempoConduccion", this.tiempoConduccion);
+                jsonObject.put("tiempoOtrosTrabajos", this.tiempoOtrosTrabajos);
+                jsonObject.put("tiempoDescanso", this.tiempoDescanso);
+            } catch (JSONException e) {
+                Log.e("Jornada", "Error al convertir a JSON: " + e.getMessage());
+            }
+            return jsonObject;
+        }
+
+        public static Jornada fromJson(JSONObject jsonObject) {
+            try {
+                String fechaInicio = jsonObject.getString("fechaInicio");
+                String fechaFin = jsonObject.getString("fechaFin");
+                JSONArray ubicacionesJsonArray = jsonObject.getJSONArray("ubicaciones");
+                List<Location> ubicaciones = new ArrayList<>();
+                for (int i = 0; i < ubicacionesJsonArray.length(); i++) {
+                    JSONObject locationJson = ubicacionesJsonArray.getJSONObject(i);
+                    Location location = new Location("");
+                    location.setLatitude(locationJson.getDouble("latitude"));
+                    location.setLongitude(locationJson.getDouble("longitude"));
+                    ubicaciones.add(location);
+                }
+                long tiempoConduccion = jsonObject.getLong("tiempoConduccion");
+                long tiempoOtrosTrabajos = jsonObject.getLong("tiempoOtrosTrabajos");
+                long tiempoDescanso = jsonObject.getLong("tiempoDescanso");
+                return new Jornada(fechaInicio, fechaFin, ubicaciones, tiempoConduccion, tiempoOtrosTrabajos, tiempoDescanso);
+            } catch (JSONException e) {
+                Log.e("Jornada", "Error al crear desde JSON: " + e.getMessage());
+                return null;
+            }
         }
 
         public static final android.os.Parcelable.Creator<Jornada> CREATOR = new android.os.Parcelable.Creator<Jornada>() {

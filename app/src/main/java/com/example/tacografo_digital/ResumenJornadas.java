@@ -1,6 +1,6 @@
 package com.example.tacografo_digital;
 
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.widget.LinearLayout;
@@ -14,24 +14,26 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
-import android.util.Log;
 import com.google.android.gms.maps.model.PolylineOptions;
+import android.util.Log;
 import android.graphics.Color;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.view.View;
 
 
-public class Pestanas extends AppCompatActivity implements OnMapReadyCallback {
+public class ResumenJornadas extends AppCompatActivity implements OnMapReadyCallback {
 
     private LinearLayout linearLayoutJornadas;
     private List<Tacografo.Jornada> listaDeJornadas;
     private MapView mapView;
     private GoogleMap googleMap;
+    private FloatingActionButton fabSalirPestanas; // Declarar el FloatingActionButton
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pestanas);
+        setContentView(R.layout.activity_resumen_jornadas);
 
         linearLayoutJornadas = findViewById(R.id.linearLayoutJornadas);
         listaDeJornadas = getIntent().getParcelableArrayListExtra("jornadas");
@@ -42,7 +44,19 @@ public class Pestanas extends AppCompatActivity implements OnMapReadyCallback {
             mapView.onCreate(savedInstanceState);
         }
 
+        fabSalirPestanas = findViewById(R.id.fabSalirPestanas); // Obtener la referencia al FAB
+
         mapView.getMapAsync(this); // Obtener el mapa de forma asíncrona
+
+        // Establecer el OnClickListener para el FAB
+        fabSalirPestanas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ResumenJornadas.this, Tacografo.class); // Reemplaza Tacografo.class con la Activity a la que quieres ir
+                startActivity(intent);
+                finish(); // Opcional: finalizar la Activity actual
+            }
+        });
     }
 
     @Override
@@ -55,42 +69,50 @@ public class Pestanas extends AppCompatActivity implements OnMapReadyCallback {
     }
 
     private void mostrarDatosDeJornadas() {
-        if (listaDeJornadas != null) {
-            for (int i = 0; i < listaDeJornadas.size(); i++) {
-                Tacografo.Jornada jornada = listaDeJornadas.get(i);
+        if (listaDeJornadas != null && !listaDeJornadas.isEmpty()) {
+            Tacografo.Jornada jornada = listaDeJornadas.get(0); // Ahora solo hay una jornada en la lista
 
-                TextView fechaInicioTextView = new TextView(this);
-                fechaInicioTextView.setText("Fecha de Inicio: " + jornada.fechaInicio);
-                fechaInicioTextView.setTextSize(18);
-                fechaInicioTextView.setTextAppearance(android.R.style.TextAppearance_Medium);
+            TextView fechaInicioTextView = new TextView(this);
+            fechaInicioTextView.setText("Fecha de Inicio: " + jornada.fechaInicio);
+            fechaInicioTextView.setTextSize(20);
+            fechaInicioTextView.setTextAppearance(android.R.style.TextAppearance_Medium);
+            fechaInicioTextView.setTextColor(Color.GREEN);
+            fechaInicioTextView.setTextAlignment(fechaInicioTextView.TEXT_ALIGNMENT_CENTER);
 
-                TextView fechaFinTextView = new TextView(this);
-                fechaFinTextView.setText("Fecha de Fin: " + jornada.fechaFin);
-                fechaFinTextView.setTextSize(18);
-                fechaFinTextView.setTextAppearance(android.R.style.TextAppearance_Medium);
+            TextView conduccionTextView = new TextView(this);
+            conduccionTextView.setText("Tiempo de Conducción: " + formatearTiempo(jornada.tiempoConduccion));
+            conduccionTextView.setTextSize(18);
+            conduccionTextView.setTextColor(Color.WHITE);
+            conduccionTextView.setTextAlignment(fechaInicioTextView.TEXT_ALIGNMENT_CENTER);
 
-                TextView conduccionTextView = new TextView(this);
-                conduccionTextView.setText("Tiempo de Conducción: " + formatearTiempo(jornada.tiempoConduccion));
-                conduccionTextView.setTextSize(16);
+            TextView descansoTextView = new TextView(this);
+            descansoTextView.setText("Tiempo de Descanso: " + formatearTiempo(jornada.tiempoDescanso));
+            descansoTextView.setTextSize(18);
+            descansoTextView.setTextColor(Color.WHITE);
+            descansoTextView.setTextAlignment(fechaInicioTextView.TEXT_ALIGNMENT_CENTER);
 
-                TextView otrosTextView = new TextView(this);
-                otrosTextView.setText("Tiempo de Otros Trabajos: " + formatearTiempo(jornada.tiempoOtrosTrabajos));
-                otrosTextView.setTextSize(16);
+            TextView otrosTextView = new TextView(this);
+            otrosTextView.setText("Tiempo de Otros Trabajos: " + formatearTiempo(jornada.tiempoOtrosTrabajos));
+            otrosTextView.setTextSize(18);
+            otrosTextView.setTextColor(Color.WHITE);
+            otrosTextView.setTextAlignment(fechaInicioTextView.TEXT_ALIGNMENT_CENTER);
 
-                TextView descansoTextView = new TextView(this);
-                descansoTextView.setText("Tiempo de Descanso: " + formatearTiempo(jornada.tiempoDescanso));
-                descansoTextView.setTextSize(16);
+            TextView fechaFinTextView = new TextView(this);
+            fechaFinTextView.setText("Fecha de Fin: " + jornada.fechaFin);
+            fechaFinTextView.setTextSize(20);
+            fechaFinTextView.setTextAppearance(android.R.style.TextAppearance_Medium);
+            fechaFinTextView.setTextColor(Color.RED);
+            fechaFinTextView.setTextAlignment(fechaInicioTextView.TEXT_ALIGNMENT_CENTER);
 
 
-                linearLayoutJornadas.addView(fechaInicioTextView);
-                linearLayoutJornadas.addView(fechaFinTextView);
-                linearLayoutJornadas.addView(conduccionTextView);
-                linearLayoutJornadas.addView(otrosTextView);
-                linearLayoutJornadas.addView(descansoTextView);
-                // Mostrar ubicaciones en el mapa
-                mostrarUbicacionesEnMapa(jornada.ubicaciones);
 
-            }
+            linearLayoutJornadas.addView(fechaInicioTextView);
+            linearLayoutJornadas.addView(conduccionTextView);
+            linearLayoutJornadas.addView(descansoTextView);
+            linearLayoutJornadas.addView(otrosTextView);
+            linearLayoutJornadas.addView(fechaFinTextView);
+            // Mostrar ubicaciones en el mapa de la jornada actual
+            mostrarUbicacionesEnMapa(jornada.ubicaciones);
         }
     }
 

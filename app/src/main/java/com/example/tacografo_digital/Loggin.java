@@ -16,6 +16,7 @@ public class Loggin extends AppCompatActivity {
     Button btLoggin;
     EditText eTUsuario;
     EditText eTContrasena;
+    Button btAcercaDe;
 
 
     @Override
@@ -23,10 +24,11 @@ public class Loggin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loggin);
 
-        btRegistrarse = (Button) findViewById(R.id.btRegistrarse);
         eTUsuario = (EditText) findViewById(R.id.eTUsuario);
         eTContrasena = (EditText) findViewById(R.id.eTContrasena);
         btLoggin = (Button) findViewById(R.id.btLoggin);
+        btRegistrarse = (Button) findViewById(R.id.btRegistrarse);
+        btAcercaDe = (Button) findViewById(R.id.btAcercaDe);
 
 
         btLoggin.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +59,15 @@ public class Loggin extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Loggin.this, Register.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            }
+        });
+
+        btAcercaDe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Loggin.this, AcercaDe.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             }
