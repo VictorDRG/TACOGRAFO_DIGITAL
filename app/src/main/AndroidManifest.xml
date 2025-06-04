@@ -46,24 +46,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAuD0-5mDSU2IevFUrCFNjHI5fipwikZdw" />
 
-        <activity
-            android:name=".Historial2"
-            android:exported="false"
-            android:label="@string/title_activity_historial2" />
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity
-            android:name=".GoogleMaps"
-            android:exported="true"
-            android:label="@string/title_activity_google_maps"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".Register"
             android:exported="true"

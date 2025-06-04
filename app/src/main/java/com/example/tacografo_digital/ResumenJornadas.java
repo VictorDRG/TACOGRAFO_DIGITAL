@@ -23,55 +23,67 @@ import android.view.View;
 
 public class ResumenJornadas extends AppCompatActivity implements OnMapReadyCallback {
 
-    private LinearLayout linearLayoutJornadas;
-    private List<Tacografo.Jornada> listaDeJornadas;
-    private MapView mapView;
-    private GoogleMap googleMap;
-    private FloatingActionButton fabSalirPestanas; // Declarar el FloatingActionButton
-
+    private LinearLayout linearLayoutJornadas; // Layout lineal para mostrar los datos de la jornada
+    private List<Tacografo.Jornada> listaDeJornadas; // Lista que contiene los datos de la jornada a mostrar
+    private MapView mapView; // Vista para mostrar el mapa
+    private GoogleMap googleMap; // Objeto para interactuar con el mapa de Google
+    private FloatingActionButton fabSalirPestanas; // Botón flotante para salir de esta pantalla
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resumen_jornadas);
 
+        // Obtiene la referencia al LinearLayout donde se mostrarán los datos
         linearLayoutJornadas = findViewById(R.id.linearLayoutJornadas);
+        // Obtiene la lista de jornadas pasada como extra desde la Activity anterior
         listaDeJornadas = getIntent().getParcelableArrayListExtra("jornadas");
 
-        // Inicializar el MapView
+        // Inicializa la vista del mapa
         mapView = findViewById(R.id.mapView);
+        // Asegura que mapView no sea nulo antes de continuar
         if (mapView != null) {
-            mapView.onCreate(savedInstanceState);
+            mapView.onCreate(savedInstanceState); // Llama al método onCreate del del MapView
         }
 
-        fabSalirPestanas = findViewById(R.id.fabSalirPestanas); // Obtener la referencia al FAB
+        // Obtiene la referencia al FloatingActionButton para salir
+        fabSalirPestanas = findViewById(R.id.fabSalirPestanas);
 
-        mapView.getMapAsync(this); // Obtener el mapa de forma asíncrona
+        // Solicita que el mapa esté listo de forma asíncrona, el callback se recibirá en onMapReady()
+        mapView.getMapAsync(this);
 
-        // Establecer el OnClickListener para el FAB
+        // Establece el OnClickListener para el FloatingActionButton de salir
         fabSalirPestanas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ResumenJornadas.this, Tacografo.class); // Reemplaza Tacografo.class con la Activity a la que quieres ir
+                // Crea un Intent para volver a la Activity Tacografo
+                Intent intent = new Intent(ResumenJornadas.this, Tacografo.class);
+                // Inicia la Activity Tacografo
                 startActivity(intent);
-                finish(); // Opcional: finalizar la Activity actual
+                finish(); // Opcional: finaliza la Activity actual para que no quede en la pila de actividades
             }
         });
     }
 
+    // Callback que se ejecuta cuando el mapa de Google está listo para ser utilizado
     @Override
     public void onMapReady(GoogleMap map) {
-        googleMap = map; // Asignar el mapa cuando esté listo
-        // Configurar el mapa aquí (tipo, centro, etc.)
-        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        googleMap = map; // Asigna la instancia del mapa de Google al objeto googleMap de la clase
+        // Configura las opciones iniciales del mapa
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL); // Establece el tipo de mapa a normal
 
-        mostrarDatosDeJornadas(); // Llamar a este método aquí para que se ejecute después de que el mapa esté listo
+        // Llama al método para mostrar los datos de las jornadas después de que el mapa esté listo
+        mostrarDatosDeJornadas();
     }
 
+    // Método para mostrar los datos de la jornada en la interfaz de usuario
     private void mostrarDatosDeJornadas() {
+        // Verifica si la lista de jornadas no es nula y no está vacía
         if (listaDeJornadas != null && !listaDeJornadas.isEmpty()) {
-            Tacografo.Jornada jornada = listaDeJornadas.get(0); // Ahora solo hay una jornada en la lista
+            // Obtiene la primera jornada de la lista (actualmente solo se espera una jornada)
+            Tacografo.Jornada jornada = listaDeJornadas.get(0);
 
+            // Crea un TextView para mostrar la fecha de inicio de la jornada
             TextView fechaInicioTextView = new TextView(this);
             fechaInicioTextView.setText("Fecha de Inicio: " + jornada.fechaInicio);
             fechaInicioTextView.setTextSize(20);
@@ -79,24 +91,28 @@ public class ResumenJornadas extends AppCompatActivity implements OnMapReadyCall
             fechaInicioTextView.setTextColor(Color.GREEN);
             fechaInicioTextView.setTextAlignment(fechaInicioTextView.TEXT_ALIGNMENT_CENTER);
 
+            // Crea un TextView para mostrar el tiempo de conducción
             TextView conduccionTextView = new TextView(this);
             conduccionTextView.setText("Tiempo de Conducción: " + formatearTiempo(jornada.tiempoConduccion));
             conduccionTextView.setTextSize(18);
             conduccionTextView.setTextColor(Color.WHITE);
             conduccionTextView.setTextAlignment(fechaInicioTextView.TEXT_ALIGNMENT_CENTER);
 
+            // Crea un TextView para mostrar el tiempo de descanso
             TextView descansoTextView = new TextView(this);
             descansoTextView.setText("Tiempo de Descanso: " + formatearTiempo(jornada.tiempoDescanso));
             descansoTextView.setTextSize(18);
             descansoTextView.setTextColor(Color.WHITE);
             descansoTextView.setTextAlignment(fechaInicioTextView.TEXT_ALIGNMENT_CENTER);
 
+            // Crea un TextView para mostrar el tiempo de otros trabajos
             TextView otrosTextView = new TextView(this);
             otrosTextView.setText("Tiempo de Otros Trabajos: " + formatearTiempo(jornada.tiempoOtrosTrabajos));
             otrosTextView.setTextSize(18);
             otrosTextView.setTextColor(Color.WHITE);
             otrosTextView.setTextAlignment(fechaInicioTextView.TEXT_ALIGNMENT_CENTER);
 
+            // Crea un TextView para mostrar la fecha de fin de la jornada
             TextView fechaFinTextView = new TextView(this);
             fechaFinTextView.setText("Fecha de Fin: " + jornada.fechaFin);
             fechaFinTextView.setTextSize(20);
@@ -104,47 +120,58 @@ public class ResumenJornadas extends AppCompatActivity implements OnMapReadyCall
             fechaFinTextView.setTextColor(Color.RED);
             fechaFinTextView.setTextAlignment(fechaInicioTextView.TEXT_ALIGNMENT_CENTER);
 
-
-
+            // Agrega los TextViews al LinearLayout para mostrarlos en la pantalla
             linearLayoutJornadas.addView(fechaInicioTextView);
             linearLayoutJornadas.addView(conduccionTextView);
             linearLayoutJornadas.addView(descansoTextView);
             linearLayoutJornadas.addView(otrosTextView);
             linearLayoutJornadas.addView(fechaFinTextView);
-            // Mostrar ubicaciones en el mapa de la jornada actual
+
+            // Llama al método para mostrar las ubicaciones de la jornada en el mapa
             mostrarUbicacionesEnMapa(jornada.ubicaciones);
         }
     }
 
+    // Método para mostrar las ubicaciones de una lista en el mapa
     private void mostrarUbicacionesEnMapa(List<Location> ubicaciones) {
+        // Verifica si el mapa de Google está inicializado, la lista de ubicaciones no es nula y no está vacía
         if (googleMap != null && ubicaciones != null && !ubicaciones.isEmpty()) {
-            // Limpiar el mapa antes de agregar nuevas ubicaciones
+            // Limpia cualquier marcador o polilínea anterior del mapa
             googleMap.clear();
+            // Crea un constructor de límites para ajustar la cámara del mapa para que incluya todas las ubicaciones
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            PolylineOptions polylineOptions = new PolylineOptions().color(Color.BLUE).width(5); // Opciones de la polilínea
+            // Crea opciones para la polilínea que se dibujará en el mapa
+            PolylineOptions polylineOptions = new PolylineOptions().color(Color.BLUE).width(5);
 
+            // Itera sobre la lista de ubicaciones
             for (Location location : ubicaciones) {
+                // Crea un objeto LatLng a partir de la latitud y longitud de la ubicación
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                // Añadir un marcador para cada ubicación
-                builder.include(latLng); // Incluir la ubicación en los límites del mapa
-                polylineOptions.add(latLng); // Añadir punto a la polilínea
+                // Incluye este punto en los límites del mapa
+                builder.include(latLng);
+                // Añade este punto a la polilínea
+                polylineOptions.add(latLng);
             }
-            googleMap.addPolyline(polylineOptions); // Añadir la polilínea al mapa
+            // Añade la polilínea al mapa
+            googleMap.addPolyline(polylineOptions);
 
-            // Centrar y hacer zoom al mapa para mostrar todas las ubicaciones
+            // Construye los límites del mapa
             LatLngBounds bounds = builder.build();
+            // Define un padding para que los puntos no estén pegados a los bordes del mapa
             int padding = 100; // Ajusta el padding según sea necesario
+            // Intenta animar la cámara del mapa para mostrar todos los puntos dentro de los límites
             try {
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
             } catch (Exception e) {
+                // Captura la excepción si hay un error al actualizar la cámara (por ejemplo, si solo hay una ubicación)
                 Log.e("CameraUpdate", "Error al actualizar la cámara: " + e.getMessage());
+                // Si solo hay una ubicación, centra el mapa en esa ubicación con un nivel de zoom específico
                 if (ubicaciones.size() == 1) {
-                    //Si solo hay una ubicación, centrar el mapa en esa ubicación
                     Location loc = ubicaciones.get(0);
                     LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15)); // Zoom level 15
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15)); // Nivel de zoom 15
                 } else if (ubicaciones.size() > 1){
-                    //Si hay mas de una ubicación pero la camara no se actualiza, centrar en la primera.
+                    // Si hay más de una ubicación pero la cámara no se actualiza, centra el mapa en la primera ubicación con un nivel de zoom menor
                     Location loc = ubicaciones.get(0);
                     LatLng ll = new LatLng(loc.getLatitude(), loc.getLongitude());
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 10));
@@ -155,6 +182,7 @@ public class ResumenJornadas extends AppCompatActivity implements OnMapReadyCall
         }
     }
 
+    // Método para formatear el tiempo en formato HH:MM:SS
     private String formatearTiempo(long tiempoMillis) {
         long segundos = tiempoMillis / 1000;
         long minutos = segundos / 60;
@@ -162,6 +190,7 @@ public class ResumenJornadas extends AppCompatActivity implements OnMapReadyCall
         return String.format(Locale.getDefault(), "%02d:%02d:%02d", horas, minutos % 60, segundos % 60);
     }
 
+    // Métodos del ciclo de vida del MapView que deben ser llamados para su correcto funcionamiento
     @Override
     protected void onResume() {
         super.onResume();
