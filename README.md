@@ -10,40 +10,40 @@ Este proyecto es una aplicación móvil desarrollada para la plataforma Android 
 
 ** Control de Actividades en Tiempo Real:** Registro y visualización en vivo de los tiempos dedicados a:
 
-     *Conducción** 🚗
-     *Descanso** 😴
-     *Otros Trabajos** 💼
+     * Conducción 🚗
+     * Descanso 😴
+     * Otros Trabajos 💼
      
-** Gestión de Jornada Laboral: * Inicio y fin de la jornada con registro de duración total.
+** Gestión de Jornada Laboral:  Inicio y fin de la jornada con registro de duración total.
 
-** Registro de Ubicación GPS: * Captura continua de la posición geográfica del dispositivo durante la actividad de conducción.
+** Registro de Ubicación GPS:  Captura continua de la posición geográfica del dispositivo durante la actividad de conducción.
 
 ** Alertas de Cumplimiento Normativo:
 
-    *Alerta de Descanso Requerido: * Notificación cuando se alcanza el límite de conducción continua.
-    *Notificación de Descanso Cumplido: * Aviso cuando se ha completado el tiempo de descanso obligatorio.
-    *Alerta de Fin de Jornada: * Notificación al alcanzar la duración máxima permitida de la jornada laboral.
+    * Alerta de Descanso Requerido:  Notificación cuando se alcanza el límite de conducción continua.
+    * Notificación de Descanso Cumplido:  Aviso cuando se ha completado el tiempo de descanso obligatorio.
+    * Alerta de Fin de Jornada:  Notificación al alcanzar la duración máxima permitida de la jornada laboral.
     
-** Persistencia de Datos: * Almacenamiento local del historial de todas las jornadas completadas.
+** Persistencia de Datos:  Almacenamiento local del historial de todas las jornadas completadas.
 
-** Historial de Jornadas: * Visualización detallada de todas las jornadas registradas, incluyendo tiempos y ubicaciones.
+** Historial de Jornadas:  Visualización detallada de todas las jornadas registradas, incluyendo tiempos y ubicaciones.
 
-** Sistema de Login Básico: * Una pantalla de inicio de sesión simple.
+** Sistema de Login Básico:  Una pantalla de inicio de sesión simple.
 
 ------------------------------ ## 🛠️ TECNOLOGIAS Y HERRAMIENTAS UTILIZADAS 🛠️ ## ------------------------------
 
-** Plataforma: * Android
-** Lenguaje de Programación: * [Java]
-** Recolección de Ubicación: * [Google Play Services Location Library](https://developers.google.com/location-history/faq)
+** Plataforma:  Android
+** Lenguaje de Programación:  Java
+** Recolección de Ubicación:  [Google Play Services Location Library] (https://developers.google.com/location-history/faq)
 ** Persistencia Local
 
 ------------------------------ ## 📊FUNCIONAMIENTO Y RECOLECCION DE DATOS 📊 ## ------------------------------
 
 La aplicación opera mediante un sistema de temporizadores que se ejecutan cada segundo, actualizando los contadores de las actividades (conducción, descanso, otros trabajos) según el estado actual seleccionado por el usuario.
 
-** Tiempos: * Los tiempos se acumulan en variables de tipo `long` en milisegundos para garantizar precisión. La interfaz de usuario se actualiza en tiempo real para mostrar los tiempos formateados (HH:MM:SS).
+** Tiempos:  Los tiempos se acumulan en variables de tipo `long` en milisegundos para garantizar precisión. La interfaz de usuario se actualiza en tiempo real para mostrar los tiempos formateados (HH:MM:SS).
 
-** Ubicaciones: * Cuando la actividad "Conducción" está activa, la aplicación solicita actualizaciones de ubicación GPS periódicamente.
+** Ubicaciones:  Cuando la actividad "Conducción" está activa, la aplicación solicita actualizaciones de ubicación GPS periódicamente.
 
 ** Almacenamiento de Jornadas:
 
