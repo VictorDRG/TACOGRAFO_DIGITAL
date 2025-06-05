@@ -33,8 +33,11 @@ Este proyecto es una aplicación móvil desarrollada para la plataforma Android 
 ------------------------------ ## 🛠️ TECNOLOGIAS Y HERRAMIENTAS UTILIZADAS 🛠️ ## ------------------------------
 
 ** Plataforma:  Android
+
 ** Lenguaje de Programación:  Java
+
 ** Recolección de Ubicación:  [Google Play Services Location Library] (https://developers.google.com/location-history/faq)
+
 ** Persistencia Local
 
 ------------------------------ ## 📊FUNCIONAMIENTO Y RECOLECCION DE DATOS 📊 ## ------------------------------
