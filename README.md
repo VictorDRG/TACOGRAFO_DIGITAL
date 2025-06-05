@@ -2,7 +2,7 @@
 
 Este proyecto es una aplicación móvil desarrollada para la plataforma Android que simula las funcionalidades esenciales de un tacógrafo digital, diseñada para registrar y gestionar las jornadas de actividad de un conductor.
 
-## Si quieres probarlo en tu Android 12 o superior, descarga el APK de:              app/release/app-release-apk ##
+## Si quieres probarlo en tu Android 12 o superior, descarga el APK de:                                       app/release/app-release-apk ##
 
 
 ------------------------------ ## 🌟 Características Principales 🌟 ## ------------------------------
