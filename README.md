@@ -6,7 +6,7 @@ Este proyecto es una aplicación móvil desarrollada para la plataforma Android 
 ## app/release/app-release-apk ##
 
 
------------------------------- ## 🌟 Características Principales 🌟 ## ------------------------------
+------------------------------ ## 🌟 CARACTERISTICAS PRINCIPALES 🌟 ## ------------------------------
 
 ** Control de Actividades en Tiempo Real:** Registro y visualización en vivo de los tiempos dedicados a:
 
@@ -30,14 +30,14 @@ Este proyecto es una aplicación móvil desarrollada para la plataforma Android 
 
 ** Sistema de Login Básico: * Una pantalla de inicio de sesión simple.
 
------------------------------- ## 🛠️ Tecnologías y Herramientas Utilizadas 🛠️ ## ------------------------------
+------------------------------ ## 🛠️ TECNOLOGIAS Y HERRAMIENTAS UTILIZADAS 🛠️ ## ------------------------------
 
 ** Plataforma: * Android
 ** Lenguaje de Programación: * [Java]
 ** Recolección de Ubicación: * [Google Play Services Location Library](https://developers.google.com/location-history/faq)
 ** Persistencia Local
 
------------------------------- ## 📊 Funcionamiento y Recolección de Datos 📊 ## ------------------------------
+------------------------------ ## 📊FUNCIONAMIENTO Y RECOLECCION DE DATOS 📊 ## ------------------------------
 
 La aplicación opera mediante un sistema de temporizadores que se ejecutan cada segundo, actualizando los contadores de las actividades (conducción, descanso, otros trabajos) según el estado actual seleccionado por el usuario.
 
